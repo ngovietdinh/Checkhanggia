@@ -1,0 +1,208 @@
+// Prisma schema - Loi xac thuc (Code-Gen Service + Verify Service)
+// Tham chieu muc 3.2 trong tai lieu SRS.
+// Cac bang phu (fraud_report, inspection_session, warranty, loyalty_ledger...)
+// se duoc them khi trien khai cac service tuong ung (giai doan sau).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CodeStatus {
+  unscanned
+  scanned
+  revoked
+}
+
+enum HierarchyLevel {
+  unit
+  box
+  carton
+}
+
+enum DataSource {
+  manual
+  api
+}
+
+enum DataQualityStatus {
+  verified
+  unverified
+}
+
+enum FraudReportStatus {
+  new
+  verifying
+  confirmed
+  rejected
+}
+
+// Bao cao nghi van hang gia tu nguoi tieu dung (CU-03 / EN-07 SRS). Public
+// endpoint (khong can dang nhap) vi nguoi tieu dung dung app/web khong co
+// tai khoan doanh nghiep.
+model FraudReport {
+  id           String            @id @default(uuid())
+  publicId     String?           @map("public_id") // co the null neu ma khong doc duoc/khong ton tai
+  imageUrls    String[]          @map("image_urls")
+  lat          Float?
+  lng          Float?
+  storeName    String?           @map("store_name")
+  description  String?
+  status       FraudReportStatus @default(new)
+  createdAt    DateTime          @default(now()) @map("created_at")
+
+  @@index([publicId])
+  @@index([status])
+  @@map("fraud_report")
+}
+
+enum AppRole {
+  ENTERPRISE_ADMIN
+  ENTERPRISE_STAFF
+}
+
+// Tai khoan dang nhap Web Admin (muc 7 SRS - scoped RBAC). MVP nay chi trien
+// khai 2 vai tro phia doanh nghiep; INSPECTOR/GOV_OFFICER/GOV_ADMIN se them
+// khi build Inspector App / Cong quan ly (giai doan sau).
+model AppUser {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  fullName     String   @map("full_name")
+  role         AppRole
+  enterpriseId String   @map("enterprise_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  enterprise Enterprise @relation(fields: [enterpriseId], references: [id])
+
+  @@index([enterpriseId])
+  @@map("app_user")
+}
+
+// Ghi nhan xuat kho (EN-03) - dau vao cho chi so volume_anomaly muc 4.4.
+model WarehouseExport {
+  id             String   @id @default(uuid())
+  enterpriseId   String   @map("enterprise_id")
+  batchId        String   @map("batch_id")
+  destinationRegion String @map("destination_region")
+  agencyName     String   @map("agency_name")
+  cartonQuantity Int      @map("carton_quantity")
+  exportedBy     String   @map("exported_by") // app_user.id
+  exportedAt     DateTime @default(now()) @map("exported_at")
+
+  enterprise Enterprise   @relation(fields: [enterpriseId], references: [id])
+  batch      ProductBatch @relation(fields: [batchId], references: [id])
+
+  @@index([enterpriseId])
+  @@index([destinationRegion])
+  @@map("warehouse_export")
+}
+
+model Enterprise {
+  id        String   @id @default(uuid())
+  name      String
+  apiKeyHash String  @unique @map("api_key_hash") // hash cua API key dung cho Product Ingestion API (muc 3.3)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  products Product[]
+  batches  ProductBatch[]
+  users    AppUser[]
+  warehouseExports WarehouseExport[]
+
+  @@map("enterprise")
+}
+
+model Product {
+  id              String   @id @default(uuid())
+  enterpriseId    String   @map("enterprise_id")
+  name            String
+  categoryCode    String   @map("category_code")
+  warrantyMonths  Int      @default(0) @map("warranty_months")
+  dataSource      DataSource @default(manual) @map("data_source")
+  externalRefId   String?  @map("external_ref_id") // idempotency key khi tao qua API (muc 3.3)
+  dataQualityStatus DataQualityStatus @default(verified) @map("data_quality_status")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  enterprise Enterprise      @relation(fields: [enterpriseId], references: [id])
+  batches    ProductBatch[]
+
+  @@unique([enterpriseId, externalRefId])
+  @@index([enterpriseId])
+  @@map("product")
+}
+
+model ProductBatch {
+  id              String   @id @default(uuid())
+  productId       String   @map("product_id")
+  enterpriseId    String   @map("enterprise_id")
+  batchNumber     String   @map("batch_number")
+  manufactureDate DateTime @map("manufacture_date")
+  expiryDate      DateTime? @map("expiry_date")
+  factoryCode     String?  @map("factory_code")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id])
+  enterprise Enterprise @relation(fields: [enterpriseId], references: [id])
+  codes   Code[]
+  warehouseExports WarehouseExport[]
+
+  @@unique([productId, batchNumber])
+  @@index([enterpriseId])
+  @@map("product_batch")
+}
+
+// Bang loi: 1 dong = 1 tem vat ly (hoac 1 don vi dong goi Parent-Child)
+model Code {
+  id              String        @id @default(uuid())
+  batchId         String        @map("batch_id")
+  publicId        String        @unique @map("public_id")   // lop cong khai, in tren QR
+  secretHash      String        @map("secret_hash")          // HASH(ma phu cao) - KHONG luu plaintext
+  status          CodeStatus    @default(unscanned)
+  parentCodeId    String?       @map("parent_code_id")       // self-reference: Parent-Child aggregation
+  hierarchyLevel  HierarchyLevel @default(unit) @map("hierarchy_level")
+  firstScannedAt  DateTime?     @map("first_scanned_at")
+  firstScannedLat Float?        @map("first_scanned_lat")
+  firstScannedLng Float?        @map("first_scanned_lng")
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  batch      ProductBatch @relation(fields: [batchId], references: [id])
+  parentCode Code?        @relation("CodeHierarchy", fields: [parentCodeId], references: [id])
+  children   Code[]       @relation("CodeHierarchy")
+
+  @@index([batchId])
+  @@index([parentCodeId])
+  @@index([status])
+  @@map("code")
+}
+
+enum ScanResult {
+  valid_first
+  duplicate
+  not_found
+  wrong_secret
+  revoked
+  blocked
+}
+
+// Ghi moi luot quet - trong production nen chuyen sang ClickHouse/TimescaleDB (xem muc 3.1),
+// o day dung chung Postgres cho MVP de don gian hoa ha tang trien khai ban dau.
+model ScanLog {
+  id               String     @id @default(uuid())
+  publicId         String     @map("public_id")
+  codeId           String?    @map("code_id")
+  result           ScanResult
+  lat              Float?
+  lng              Float?
+  deviceFingerprint String?   @map("device_fingerprint")
+  requestIp        String?    @map("request_ip")
+  scannedAt        DateTime   @default(now()) @map("scanned_at")
+
+  @@index([publicId])
+  @@index([codeId])
+  @@index([scannedAt])
+  @@map("scan_log")
+}

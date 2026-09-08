@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+::selection {
+  background: rgba(0, 229, 160, 0.25);
+}
+
+/* html5-qrcode tu ve UI mac dinh cho khung quet - ghi de mot chut de hop mau thuong hieu */
+#qr-reader {
+  border: none !important;
+}
+#qr-reader video {
+  border-radius: 16px;
+}
