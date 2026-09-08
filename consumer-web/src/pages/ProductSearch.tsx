@@ -28,7 +28,7 @@ export default function ProductSearch() {
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abortRef = useRef<AbortController | null>(null);
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLFormElement | null>(null);
 
   // Dong dropdown khi bam ra ngoai
   useEffect(() => {
