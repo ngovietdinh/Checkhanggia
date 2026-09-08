@@ -1,17 +1,12 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 
+// JwtModule da duoc dang ky global:true trong CommonModule - khong can
+// dang ky lai o day. AuthService inject JwtService truc tiep, tu dong
+// nhan duoc instance tu CommonModule.
 @Module({
-  imports: [
-    JwtModule.register({
-      secret: process.env.JWT_SECRET || 'dev-only-insecure-secret-doi-trong-env',
-      signOptions: { expiresIn: '8h' },
-    }),
-  ],
   controllers: [AuthController],
   providers: [AuthService],
-  exports: [JwtModule],
 })
 export class AuthModule {}

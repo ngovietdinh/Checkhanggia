@@ -1,5 +1,8 @@
 # Anti-Fake Backend — Code-Gen Service + Verify Service (loi xac thuc)
 
+> **Muốn deploy lên Internet (Supabase + Railway + Vercel)?** Xem
+> [`DEPLOYMENT.md`](./DEPLOYMENT.md) — hướng dẫn đầy đủ từng bước.
+
 Trien khai phan loi cua tai lieu SRS: sinh ma QR hai lop (muc 4.2), xac thuc
 quet chong double-scan/brute-force (muc 4.3), va dong goi Parent-Child (muc
 2.3 / 3.2). Day la MVP cua Giai doan 1 trong Roadmap (muc 6.1) — chua co
@@ -131,6 +134,43 @@ frontend `web-admin` (React):
 | `/api/v1/products/batches` | GET/POST | Bearer JWT | Danh sách/tạo lô sản xuất |
 | `/api/v1/warehouse-exports` | GET/POST | Bearer JWT | Ghi nhận & xem lịch sử xuất kho (EN-03) |
 | `/api/v1/dashboard/summary` | GET | Bearer JWT | Số liệu tổng hợp cho Dashboard (EN-04) |
+| `/api/v1/fraud-reports` | POST | — (public) | Gửi báo cáo hàng giả kèm ảnh (CU-03) |
+| `/api/v1/fraud-reports` | GET | Bearer JWT | Danh sách báo cáo cho Web Admin, kèm tổng hợp theo trạng thái/loại hàng hóa (EN-07) |
+| `/api/v1/fraud-reports/:id/status` | PATCH | Bearer JWT | Duyệt/từ chối báo cáo |
+| `/api/v1/search/products` | GET | — (public) | Tìm kiếm toàn trường (1 từ khóa `q`) — quét tên sản phẩm, số lô, mã ĐKSP, doanh nghiệp... |
+| `/api/v1/search/suggest` | GET | — (public) | Gợi ý nhanh cho autocomplete (dùng chung tham số `q`) |
+| `/api/v1/counterfeit-alerts` | GET | — (public) | Danh sách sản phẩm đã bị xác nhận hàng giả/vi phạm |
+| `/api/v1/counterfeit-alerts` | POST | header `x-admin-key` | Thêm mới 1 bản ghi vào danh sách hàng giả |
+
+## Nhập dữ liệu "Danh sách hàng giả" (Counterfeit Alert)
+
+Đã có sẵn dữ liệu mẫu 40 sản phẩm tại `prisma/data/counterfeit-alerts-seed.json`
+(bóc tách từ dữ liệu người dùng cung cấp ban đầu). Import vào DB bằng:
+
+```bash
+npm run import:counterfeit
+```
+
+Chạy lại nhiều lần an toàn — script tự bỏ qua bản ghi đã tồn tại (so khớp
+theo tên sản phẩm + mã ĐKSP). Muốn import file khác:
+
+```bash
+npm run import:counterfeit -- duong/dan/file-cua-ban.json
+```
+
+File JSON phải là mảng các object theo đúng cấu trúc trong file mẫu
+(`productName`, `productType`, `registrationNumber`, `violatingBatches`
+(mảng), `responsibleEntity`, `sourceGroup` — chỉ `productName` và
+`violatingBatches` là bắt buộc).
+
+Muốn thêm từng bản ghi qua API (ví dụ từ hệ thống khác gọi sang), dùng:
+
+```bash
+curl -X POST http://localhost:3000/api/v1/counterfeit-alerts \
+  -H "Content-Type: application/json" \
+  -H "x-admin-key: <ADMIN_API_KEY trong .env>" \
+  -d '{"productName": "...", "violatingBatches": ["..."]}'
+```
 
 `/api/v1/codegen/*` giờ chấp nhận **cả** `x-api-key` (ERP) **lẫn** Bearer JWT
 (nhân viên đăng nhập Web Admin) — xem `EnterpriseAuthGuard`.

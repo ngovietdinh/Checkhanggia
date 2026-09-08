@@ -1,5 +1,8 @@
 # Anti-Fake Consumer Web (Frontend công khai cho người tiêu dùng)
 
+> **Deploy lên Vercel?** Xem `DEPLOYMENT.md` trong repo `anti-fake-backend`
+> (Phần 4) — hướng dẫn chung cho cả 2 frontend.
+
 Trang web tra cứu công khai — không cần đăng nhập, tối ưu cho điện thoại.
 Trien khai CU-01, CU-02, CU-03 trong SRS (thay cho Mobile App o giai doan
 dau, xem README goc). Nối trực tiếp vào `anti-fake-backend`.

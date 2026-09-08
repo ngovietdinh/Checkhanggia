@@ -8,6 +8,8 @@ import { ProductModule } from './product/product.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { FraudReportModule } from './fraud-report/fraud-report.module';
+import { SearchModule } from './search/search.module';
+import { CounterfeitAlertModule } from './counterfeit-alert/counterfeit-alert.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { FraudReportModule } from './fraud-report/fraud-report.module';
     WarehouseModule,
     DashboardModule,
     FraudReportModule,
+    SearchModule,
+    CounterfeitAlertModule,
   ],
 })
 export class AppModule {}

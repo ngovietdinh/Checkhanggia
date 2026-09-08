@@ -8,6 +8,7 @@ import { ApiKeyGuard } from './api-key.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { RolesGuard } from './roles.guard';
 import { EnterpriseAuthGuard } from './enterprise-auth.guard';
+import { SupabaseStorageService } from './supabase-storage.service';
 
 @Global()
 @Module({
@@ -15,6 +16,7 @@ import { EnterpriseAuthGuard } from './enterprise-auth.guard';
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'dev-only-insecure-secret-doi-trong-env',
       signOptions: { expiresIn: '8h' },
+      global: true, // bat buoc: de JwtService kha dung o MOI module khac (ProductModule, WarehouseModule...)
     }),
   ],
   providers: [
@@ -26,6 +28,7 @@ import { EnterpriseAuthGuard } from './enterprise-auth.guard';
     JwtAuthGuard,
     RolesGuard,
     EnterpriseAuthGuard,
+    SupabaseStorageService,
   ],
   exports: [
     PrismaService,
@@ -36,6 +39,7 @@ import { EnterpriseAuthGuard } from './enterprise-auth.guard';
     JwtAuthGuard,
     RolesGuard,
     EnterpriseAuthGuard,
+    SupabaseStorageService,
   ],
 })
 export class CommonModule {}

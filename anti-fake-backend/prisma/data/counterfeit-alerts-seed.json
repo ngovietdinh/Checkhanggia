@@ -1,0 +1,322 @@
+[
+  {
+    "productName": "Ăn ngủ ngon RQ",
+    "productType": "Siro / Hỗ trợ bé",
+    "registrationNumber": "13545/2019/ĐKSP",
+    "violatingBatches": ["160524", "240124"],
+    "responsibleEntity": "Cty TNHH Thảo dược RQPHAR Việt",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "SMART KIDS DROPS",
+    "productType": "Siro / Hỗ trợ bé",
+    "registrationNumber": "7056/2021/ĐKSP",
+    "violatingBatches": ["280325", "120524"],
+    "responsibleEntity": "Cty TNHH Thảo dược RQPHAR Việt",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Kidscold",
+    "productType": "Siro hô hấp",
+    "registrationNumber": "3312/2020/ĐKSP",
+    "violatingBatches": ["210224"],
+    "responsibleEntity": "Giả mạo nhãn SX của Santex",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Brios Cal New",
+    "productType": "Thực phẩm bổ sung",
+    "registrationNumber": "9831/2020/ĐKSP",
+    "violatingBatches": ["Toàn bộ lô 2024"],
+    "responsibleEntity": "Cty TNHH CN sinh học Medipharm",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Polivita RQ",
+    "productType": "Vitamin tổng hợp",
+    "registrationNumber": "4954/2020/ĐKSP",
+    "violatingBatches": ["Lô năm 2024", "Lô năm 2025"],
+    "responsibleEntity": "Cty TNHH Thảo dược RQPHAR Việt",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "BỔ PHẾ THANH RQ",
+    "productType": "Thực phẩm bổ phổi",
+    "registrationNumber": "2341/2021/ĐKSP",
+    "violatingBatches": ["Lô SX năm 2024"],
+    "responsibleEntity": "Cty TNHH Thảo Nguyên Xanh Group",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "LACTO - BABYGOLD PLUS",
+    "productType": "Cốm vi sinh trẻ em",
+    "registrationNumber": "5122/2021/ĐKSP",
+    "violatingBatches": ["Tất cả tang vật thu giữ"],
+    "responsibleEntity": "Mạo danh Cty TNHH Dược phẩm Fusi",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Ginko DHA Plus",
+    "productType": "Bổ não / Tuần hoàn",
+    "registrationNumber": "1143/2022/ĐKSP",
+    "violatingBatches": ["Toàn bộ lô"],
+    "responsibleEntity": "Mạo danh Cty CP Dược phẩm Bika Pharma",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Liver RQ",
+    "productType": "Hỗ trợ giải độc gan",
+    "registrationNumber": "8841/2021/ĐKSP",
+    "violatingBatches": ["110424"],
+    "responsibleEntity": "Cty TNHH Thảo dược RQPHAR Việt",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Đông trùng hạ thảo RQ",
+    "productType": "Viên nang bồi bổ",
+    "registrationNumber": "6521/2020/ĐKSP",
+    "violatingBatches": ["Toàn bộ lô 2024"],
+    "responsibleEntity": "Cty TNHH Thảo dược RQPHAR Việt",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Brain Kids",
+    "productType": "Siro bổ não trẻ em",
+    "registrationNumber": "4432/2022/ĐKSP",
+    "violatingBatches": ["Toàn bộ tang vật"],
+    "responsibleEntity": "Mạo danh hệ thống phân phối Santex",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Calci MK7",
+    "productType": "Thực phẩm bổ sung",
+    "registrationNumber": "9021/2021/ĐKSP",
+    "violatingBatches": ["Toàn bộ lô"],
+    "responsibleEntity": "Giả mạo hồ sơ công bố nguồn gốc",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Vitamin E RQ",
+    "productType": "Viên nang làm đẹp",
+    "registrationNumber": "3211/2021/ĐKSP",
+    "violatingBatches": ["050624"],
+    "responsibleEntity": "Cty TNHH Thảo dược RQPHAR Việt",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Dạ dày HP",
+    "productType": "Hỗ trợ tiêu hóa",
+    "registrationNumber": "1045/2022/ĐKSP",
+    "violatingBatches": ["Toàn bộ lô"],
+    "responsibleEntity": "Mạo danh sản xuất đạt chuẩn GMP",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Omega 3 RQ",
+    "productType": "Thực phẩm bổ sung",
+    "registrationNumber": "7741/2021/ĐKSP",
+    "violatingBatches": ["180724"],
+    "responsibleEntity": "Cty TNHH Thảo dược RQPHAR Việt",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Canxi Nano Smart Kids",
+    "productType": "Siro / Hỗ trợ bé",
+    "registrationNumber": "5421/2020/ĐKSP",
+    "violatingBatches": ["Toàn bộ tang vật"],
+    "responsibleEntity": "Phân phối chui qua mạng xã hội",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Hoạt huyết dưỡng não RQ",
+    "productType": "Bổ não",
+    "registrationNumber": "1982/2021/ĐKSP",
+    "violatingBatches": ["090324"],
+    "responsibleEntity": "Cty TNHH Thảo dược RQPHAR Việt",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Tăng cân thảo mộc",
+    "productType": "Hỗ trợ thể trạng",
+    "registrationNumber": "Đang tra cứu",
+    "violatingBatches": ["Toàn bộ các lô"],
+    "responsibleEntity": "Cơ sở gia công tự phát tại Phú Thọ",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Viên khớp Tâm Bình (Giả)",
+    "productType": "Hỗ trợ xương khớp",
+    "registrationNumber": "Giả nhãn hiệu lớn",
+    "violatingBatches": ["Toàn bộ số lượng"],
+    "responsibleEntity": "Đường dây làm giả bao bì nhãn mác",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Siro ăn ngon tiêu hóa khỏe",
+    "productType": "Siro trẻ em",
+    "registrationNumber": "3441/2022/ĐKSP",
+    "violatingBatches": ["Toàn bộ lô"],
+    "responsibleEntity": "Phân phối qua Chợ thuốc Hapulico",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Collagen Glutathione New",
+    "productType": "Viên uống trắng da",
+    "registrationNumber": "Giả nhãn ngoại",
+    "violatingBatches": ["Toàn bộ tang vật"],
+    "responsibleEntity": "Nhóm đối tượng chạy quảng cáo TikTok",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "Sữa bột tăng chiều cao IQ",
+    "productType": "Sữa công thức giả",
+    "registrationNumber": "Giả nhãn hiệu lớn",
+    "violatingBatches": ["Toàn bộ lô"],
+    "responsibleEntity": "Xưởng đóng hộp lậu tại địa phương",
+    "sourceGroup": "Phân nhóm 1: RQPHAR & Hệ thống Santex, Fusi, Bika Pharma"
+  },
+  {
+    "productName": "MEDI KID CALCIUM K2",
+    "productType": "Siro bổ sung Canxi",
+    "registrationNumber": "4311/2021/ĐKSP",
+    "violatingBatches": ["Toàn bộ lô sản xuất"],
+    "responsibleEntity": "Công ty TNHH Công nghệ Herbitech",
+    "sourceGroup": "Phân nhóm 2: Chuyên án Công ty Herbitech & Rance Pharma"
+  },
+  {
+    "productName": "Ăn ngon BABY SHARK",
+    "productType": "Thực phẩm cho trẻ",
+    "registrationNumber": "8922/2020/ĐKSP",
+    "violatingBatches": ["Toàn bộ lô lưu hành"],
+    "responsibleEntity": "Công ty TNHH Công nghệ Herbitech",
+    "sourceGroup": "Phân nhóm 2: Chuyên án Công ty Herbitech & Rance Pharma"
+  },
+  {
+    "productName": "Kha Tử An Phế Đơn",
+    "productType": "Siro ho / Bổ phế",
+    "registrationNumber": "1023/2022/ĐKSP",
+    "violatingBatches": ["Tất cả sản phẩm"],
+    "responsibleEntity": "Công ty TNHH Công nghệ Herbitech",
+    "sourceGroup": "Phân nhóm 2: Chuyên án Công ty Herbitech & Rance Pharma"
+  },
+  {
+    "productName": "Siro Ích Thanh Dafa Plus",
+    "productType": "Thực phẩm hô hấp",
+    "registrationNumber": "5561/2021/ĐKSP",
+    "violatingBatches": ["Toàn bộ lô"],
+    "responsibleEntity": "Công ty TNHH Công nghệ Herbitech",
+    "sourceGroup": "Phân nhóm 2: Chuyên án Công ty Herbitech & Rance Pharma"
+  },
+  {
+    "productName": "Siro Hio Sinvin",
+    "productType": "Siro cho trẻ em",
+    "registrationNumber": "Đang tra cứu",
+    "violatingBatches": ["Toàn bộ lô"],
+    "responsibleEntity": "Công ty TNHH Công nghệ Herbitech",
+    "sourceGroup": "Phân nhóm 2: Chuyên án Công ty Herbitech & Rance Pharma"
+  },
+  {
+    "productName": "Siro Thảo Mộc",
+    "productType": "Siro ho",
+    "registrationNumber": "Đang tra cứu",
+    "violatingBatches": ["Toàn bộ lô"],
+    "responsibleEntity": "Công ty TNHH Công nghệ Herbitech",
+    "sourceGroup": "Phân nhóm 2: Chuyên án Công ty Herbitech & Rance Pharma"
+  },
+  {
+    "productName": "Nutviokid New One",
+    "productType": "Thực phẩm dinh dưỡng",
+    "registrationNumber": "6120/2021/ĐKSP",
+    "violatingBatches": ["Toàn bộ lô"],
+    "responsibleEntity": "Công ty TNHH Công nghệ Herbitech",
+    "sourceGroup": "Phân nhóm 2: Chuyên án Công ty Herbitech & Rance Pharma"
+  },
+  {
+    "productName": "Antri Medstand",
+    "productType": "Hỗ trợ điều trị trĩ",
+    "registrationNumber": "7431/2020/ĐKSP",
+    "violatingBatches": ["Toàn bộ lô"],
+    "responsibleEntity": "Công ty TNHH Công nghệ Herbitech",
+    "sourceGroup": "Phân nhóm 2: Chuyên án Công ty Herbitech & Rance Pharma"
+  },
+  {
+    "productName": "Siro Bromelain",
+    "productType": "Giảm sưng phù nề",
+    "registrationNumber": "Đang tra cứu",
+    "violatingBatches": ["Toàn bộ lô"],
+    "responsibleEntity": "Công ty TNHH Công nghệ Herbitech",
+    "sourceGroup": "Phân nhóm 2: Chuyên án Công ty Herbitech & Rance Pharma"
+  },
+  {
+    "productName": "MEDI-Proho MEC - IVY",
+    "productType": "Siro ho bổ phế",
+    "registrationNumber": "2911/2021/ĐKSP",
+    "violatingBatches": ["Toàn bộ lô"],
+    "responsibleEntity": "Công ty TNHH Công nghệ Herbitech",
+    "sourceGroup": "Phân nhóm 2: Chuyên án Công ty Herbitech & Rance Pharma"
+  },
+  {
+    "productName": "Colasta Collagen",
+    "productType": "Đẹp da / Chống lão hóa",
+    "registrationNumber": "Giả nhãn Medistar",
+    "violatingBatches": ["Toàn bộ lô lưu thông"],
+    "responsibleEntity": "Thu hồi theo công văn Cục ATTP",
+    "sourceGroup": "Phân nhóm 3: Giả danh mác Ngoại nhập & Đông y"
+  },
+  {
+    "productName": "Viên nám Glutathion 600",
+    "productType": "Mỹ phẩm / Trắng da",
+    "registrationNumber": "Nhãn hiệu nổi tiếng",
+    "violatingBatches": ["> 7.000 hộp"],
+    "responsibleEntity": "Xưởng gia công lậu tại Thanh Hóa",
+    "sourceGroup": "Phân nhóm 3: Giả danh mác Ngoại nhập & Đông y"
+  },
+  {
+    "productName": "Collagen Biotin Slim",
+    "productType": "Viên uống đẹp da",
+    "registrationNumber": "Nhãn hiệu ngoại",
+    "violatingBatches": ["Toàn bộ thùng hàng"],
+    "responsibleEntity": "Nhóm phân phối lậu qua Zalo",
+    "sourceGroup": "Phân nhóm 3: Giả danh mác Ngoại nhập & Đông y"
+  },
+  {
+    "productName": "Thuốc xương khớp (Khớp Xanh)",
+    "productType": "Đông y trôi nổi",
+    "registrationNumber": "Không có số ĐK",
+    "violatingBatches": ["Hàng ngàn hộp"],
+    "responsibleEntity": "Cơ sở bào chế lậu tại Thanh Hóa",
+    "sourceGroup": "Phân nhóm 3: Giả danh mác Ngoại nhập & Đông y"
+  },
+  {
+    "productName": "Thuốc xương khớp (Khớp Đỏ)",
+    "productType": "Đông y trôi nổi",
+    "registrationNumber": "Không có số ĐK",
+    "violatingBatches": ["Hàng ngàn hộp"],
+    "responsibleEntity": "Cơ sở bào chế lậu tại Thanh Hóa",
+    "sourceGroup": "Phân nhóm 3: Giả danh mác Ngoại nhập & Đông y"
+  },
+  {
+    "productName": "Tọa cốt thiên ma",
+    "productType": "Thuốc khớp Đông y",
+    "registrationNumber": "Giả nhãn Malaysia",
+    "violatingBatches": ["Toàn bộ tang vật"],
+    "responsibleEntity": "Nhập lậu, dán mác và đóng gói lậu",
+    "sourceGroup": "Phân nhóm 3: Giả danh mác Ngoại nhập & Đông y"
+  },
+  {
+    "productName": "GH Creation EX (Giả)",
+    "productType": "Tăng chiều cao Nhật",
+    "registrationNumber": "Giả nhãn Nhật Bản",
+    "violatingBatches": ["Toàn bộ lô thu giữ"],
+    "responsibleEntity": "Tuồn lậu qua Chợ thuốc Hapulico",
+    "sourceGroup": "Phân nhóm 3: Giả danh mác Ngoại nhập & Đông y"
+  },
+  {
+    "productName": "Sữa bột Ensure Gold (Giả)",
+    "productType": "Dinh dưỡng người già",
+    "registrationNumber": "Giả thương hiệu Mỹ",
+    "violatingBatches": ["Toàn bộ số lon tiêu hủy"],
+    "responsibleEntity": "Đường dây đóng hộp lậu từ tỉnh",
+    "sourceGroup": "Phân nhóm 3: Giả danh mác Ngoại nhập & Đông y"
+  }
+]

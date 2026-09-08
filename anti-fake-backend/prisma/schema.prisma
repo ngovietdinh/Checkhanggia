@@ -8,8 +8,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // connection pooler (PgBouncer) - dung cho app luc chay
+  directUrl = env("DIRECT_URL")   // connection truc tiep - dung cho migrate/introspect (yeu cau cua Supabase)
 }
 
 enum CodeStatus {
@@ -32,6 +33,25 @@ enum DataSource {
 enum DataQualityStatus {
   verified
   unverified
+}
+
+// Danh sach den hang gia da duoc co quan chuc nang xac nhan (khac ban chat
+// voi Product/ProductBatch - nhung bang do la san pham DANG KY HOP PHAP boi
+// doanh nghiep dung he thong nay; con bang nay la SAN PHAM DA BI XAC NHAN
+// GIA, thu thap tu cong van/bao cao xu ly vi pham, khong gan voi enterprise
+// nao trong he thong - day la du lieu tham chieu quoc gia).
+model CounterfeitAlert {
+  id                 String   @id @default(uuid())
+  productName        String   @map("product_name")
+  productType        String?  @map("product_type")
+  registrationNumber String?  @map("registration_number") // "Ma DKSP" - co the la ghi chu neu khong co so chinh thuc (vd "Khong co so DK")
+  violatingBatches   String[] @map("violating_batches")
+  responsibleEntity  String?  @map("responsible_entity") // doanh nghiep chiu trach nhiem / ghi chu vi pham
+  sourceGroup        String?  @map("source_group") // vd "Phan nhom 1: RQPHAR & He thong Santex, Fusi, Bika Pharma"
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  @@index([productName])
+  @@map("counterfeit_alert")
 }
 
 enum FraudReportStatus {

@@ -1,5 +1,8 @@
 # Anti-Fake Web Admin (Frontend)
 
+> **Deploy lên Vercel?** Xem `DEPLOYMENT.md` trong repo `anti-fake-backend`
+> (Phần 4) — hướng dẫn chung cho cả 2 frontend.
+
 Giao diện Web Admin cho Doanh nghiệp (muc 2.3 SRS: EN-01, EN-02, EN-03, EN-04).
 React + Vite + TypeScript + Tailwind, nối trực tiếp vào backend NestJS
 (`anti-fake-backend`) qua REST API.
