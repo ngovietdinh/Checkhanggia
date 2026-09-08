@@ -1,11 +1,12 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, Truck, LogOut, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, Package, Truck, LogOut, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/products', label: 'Sản phẩm & Lô', icon: Package, end: false },
   { to: '/warehouse', label: 'Xuất kho', icon: Truck, end: false },
+  { to: '/fraud-reports', label: 'Báo cáo hàng giả', icon: AlertTriangle, end: false },
 ];
 
 export default function Layout() {

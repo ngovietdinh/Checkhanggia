@@ -88,7 +88,7 @@ export class VerifyService {
           "first_scanned_at" = NOW(),
           "first_scanned_lat" = ${dto.lat ?? null},
           "first_scanned_lng" = ${dto.lng ?? null}
-      WHERE id = ${code.id}::uuid AND status = 'unscanned'
+      WHERE id = ${code.id} AND status = 'unscanned'
       RETURNING id;
     `;
 

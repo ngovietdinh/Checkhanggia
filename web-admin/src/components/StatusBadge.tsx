@@ -8,6 +8,10 @@ const STATUS_STYLES: Record<string, { label: string; className: string }> = {
   wrong_secret: { label: 'Sai mã', className: 'text-verify-danger bg-verify-danger/10 border-verify-danger/30' },
   verified: { label: 'Đã xác minh', className: 'text-verify-valid bg-verify-valid/10 border-verify-valid/30' },
   unverified: { label: 'Chưa xác minh', className: 'text-verify-warn bg-verify-warn/10 border-verify-warn/30' },
+  new: { label: 'Mới', className: 'text-verify-data bg-verify-data/10 border-verify-data/30' },
+  verifying: { label: 'Đang xác minh', className: 'text-verify-warn bg-verify-warn/10 border-verify-warn/30' },
+  confirmed: { label: 'Đã xác nhận giả', className: 'text-verify-danger bg-verify-danger/10 border-verify-danger/30' },
+  rejected: { label: 'Đã loại bỏ', className: 'text-text-muted bg-canvas-surface2 border-canvas-border' },
 };
 
 export default function StatusBadge({ status }: { status: string }) {

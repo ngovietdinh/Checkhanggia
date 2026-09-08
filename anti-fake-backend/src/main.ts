@@ -1,27 +1,12 @@
 import 'reflect-metadata';
-import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
-import helmet from 'helmet';
-import { AppModule } from './app.module';
+import { createApp } from './create-app';
 
+/**
+ * Entry point khi chay nhu server thuong (local, Railway, Render, may chu
+ * rieng...). Tren Vercel, dung api/index.ts thay the (khong .listen()).
+ */
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    cors: {
-      origin: (process.env.CORS_ORIGIN || 'http://localhost:5173').split(','),
-      credentials: true,
-    },
-  });
-
-  app.use(helmet());
-
-  // Loai bo field khong khai bao trong DTO, chan payload thua/khong hop le som
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+  const app = await createApp();
 
   const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
   await app.listen(port);

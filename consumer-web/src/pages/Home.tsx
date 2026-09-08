@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ScanLine, ShieldCheck, Keyboard, FileWarning, X } from 'lucide-react';
+import { ScanLine, ShieldCheck, Keyboard, FileWarning, X, Search } from 'lucide-react';
 import QrScanner from '../components/QrScanner';
 
 export default function Home() {
@@ -68,6 +68,13 @@ export default function Home() {
             >
               <Keyboard size={17} />
               Nhập mã thủ công
+            </button>
+            <button
+              onClick={() => navigate('/search')}
+              className="w-full flex items-center justify-center gap-2.5 bg-canvas-surface border border-canvas-border rounded-2xl py-4 text-sm text-text-muted hover:text-text hover:border-verify-data/40 transition"
+            >
+              <Search size={17} />
+              Tra cứu theo tên & số lô
             </button>
           </div>
         )}

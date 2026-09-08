@@ -70,7 +70,7 @@ export class FraudReportService {
        LEFT JOIN code c ON c.public_id = fr.public_id
        LEFT JOIN product_batch pb ON pb.id = c.batch_id
        LEFT JOIN product p ON p.id = pb.product_id
-       WHERE (pb.enterprise_id IS NULL OR pb.enterprise_id = $1::uuid)
+       WHERE (pb.enterprise_id IS NULL OR pb.enterprise_id = $1)
        ${statusFilter}
        ORDER BY fr.created_at DESC
        LIMIT ${PAGE_SIZE} OFFSET ${(page - 1) * PAGE_SIZE};`,
@@ -82,7 +82,7 @@ export class FraudReportService {
        FROM fraud_report fr
        LEFT JOIN code c ON c.public_id = fr.public_id
        LEFT JOIN product_batch pb ON pb.id = c.batch_id
-       WHERE (pb.enterprise_id IS NULL OR pb.enterprise_id = $1::uuid)
+       WHERE (pb.enterprise_id IS NULL OR pb.enterprise_id = $1)
        GROUP BY fr.status;`,
       enterpriseId,
     );
@@ -93,7 +93,7 @@ export class FraudReportService {
        LEFT JOIN code c ON c.public_id = fr.public_id
        LEFT JOIN product_batch pb ON pb.id = c.batch_id
        LEFT JOIN product p ON p.id = pb.product_id
-       WHERE (pb.enterprise_id IS NULL OR pb.enterprise_id = $1::uuid) AND p.category_code IS NOT NULL
+       WHERE (pb.enterprise_id IS NULL OR pb.enterprise_id = $1) AND p.category_code IS NOT NULL
        GROUP BY p.category_code
        ORDER BY count DESC;`,
       enterpriseId,

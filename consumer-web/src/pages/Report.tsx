@@ -2,8 +2,9 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { ArrowLeft, Camera, MapPin, CheckCircle2, Loader2, X } from 'lucide-react';
 import { api } from '../lib/api';
+import { compressImage } from '../lib/image-compress';
 
-const MAX_IMAGES = 4;
+const MAX_IMAGES = 3;
 
 export default function Report() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function Report() {
 
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [compressing, setCompressing] = useState(false);
   const [storeName, setStoreName] = useState('');
   const [description, setDescription] = useState('');
   const [position, setPosition] = useState<GeolocationPosition | null>(null);
@@ -39,12 +41,21 @@ export default function Report() {
     );
   }
 
-  function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files || []).slice(0, MAX_IMAGES - images.length);
-    if (files.length === 0) return;
-    setImages((prev) => [...prev, ...files].slice(0, MAX_IMAGES));
-    setPreviews((prev) => [...prev, ...files.map((f) => URL.createObjectURL(f))].slice(0, MAX_IMAGES));
+  async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
+    const rawFiles = Array.from(e.target.files || []).slice(0, MAX_IMAGES - images.length);
     e.target.value = '';
+    if (rawFiles.length === 0) return;
+
+    // Nen anh truoc khi them vao danh sach - anh dien thoai thuong 3-8MB,
+    // trong khi backend chi nhan toi da 1MB/anh (gioi han cua Vercel).
+    setCompressing(true);
+    try {
+      const compressed = await Promise.all(rawFiles.map((f) => compressImage(f)));
+      setImages((prev) => [...prev, ...compressed].slice(0, MAX_IMAGES));
+      setPreviews((prev) => [...prev, ...compressed.map((f) => URL.createObjectURL(f))].slice(0, MAX_IMAGES));
+    } finally {
+      setCompressing(false);
+    }
   }
 
   function removeImage(index: number) {
@@ -131,12 +142,26 @@ export default function Report() {
               ))}
               {images.length < MAX_IMAGES && (
                 <label className="aspect-square rounded-lg border border-dashed border-canvas-border flex items-center justify-center cursor-pointer hover:border-verify-data/40 transition">
-                  <Camera size={20} className="text-text-muted" />
-                  <input type="file" accept="image/*" capture="environment" multiple className="hidden" onChange={handleFileChange} />
+                  {compressing ? (
+                    <Loader2 size={18} className="text-text-muted animate-spin" />
+                  ) : (
+                    <Camera size={20} className="text-text-muted" />
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    multiple
+                    disabled={compressing}
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
                 </label>
               )}
             </div>
-            <p className="text-[11px] text-text-muted mt-1.5">Nên chụp cả mặt tem và tổng thể sản phẩm</p>
+            <p className="text-[11px] text-text-muted mt-1.5">
+              Nên chụp cả mặt tem và tổng thể sản phẩm — ảnh sẽ được tự động nén để gửi nhanh hơn
+            </p>
           </div>
 
           <div>

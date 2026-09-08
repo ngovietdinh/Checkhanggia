@@ -1,7 +1,14 @@
 # Anti-Fake Backend — Code-Gen Service + Verify Service (loi xac thuc)
 
-> **Muốn deploy lên Internet (Supabase + Railway + Vercel)?** Xem
+> **Muốn deploy lên Internet (Vercel + Supabase)?** Xem
 > [`DEPLOYMENT.md`](./DEPLOYMENT.md) — hướng dẫn đầy đủ từng bước.
+
+Chạy được ở 2 chế độ, dùng chung code:
+- **Server thường** (local, Railway, Render, VPS...): `npm run start:dev` /
+  `npm run start:prod` → dùng `src/main.ts`, có `.listen(port)`.
+- **Vercel Serverless Function**: `api/index.ts` → không `.listen()`, mỗi
+  request là 1 lần gọi function riêng. Xem giới hạn quan trọng (upload ảnh
+  tối đa 1MB, cold start...) trong `DEPLOYMENT.md`.
 
 Trien khai phan loi cua tai lieu SRS: sinh ma QR hai lop (muc 4.2), xac thuc
 quet chong double-scan/brute-force (muc 4.3), va dong goi Parent-Child (muc

@@ -22,7 +22,11 @@ import { SupabaseStorageService } from '../common/supabase-storage.service';
 import { JwtAuthGuard } from '../common/jwt-auth.guard';
 
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8MB/anh
+// Gioi han nho de tuong thich voi Vercel Serverless Functions (gioi han cung
+// 4.5MB/request, khong tang duoc). 3 anh x 1MB = 3MB, con du ~1.5MB cho phan
+// du lieu khac cua multipart request (boundary, field text...).
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB/anh
+const MAX_FILES = 3;
 
 /**
  * Endpoint public (khong dang nhap) cho luong bao cao hang gia CU-03.
@@ -40,7 +44,7 @@ export class FraudReportController {
   @Post()
   @Throttle({ default: { limit: 5, ttl: 60_000 } }) // chong spam bao cao (muc 5.2 SRS)
   @UseInterceptors(
-    FilesInterceptor('images', 4, {
+    FilesInterceptor('images', MAX_FILES, {
       storage: memoryStorage(),
       limits: { fileSize: MAX_FILE_SIZE },
       fileFilter: (_req, file, cb) => {

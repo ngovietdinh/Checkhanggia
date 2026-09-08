@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import Warehouse from './pages/Warehouse';
+import FraudReports from './pages/FraudReports';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
             <Route index element={<Dashboard />} />
             <Route path="products" element={<Products />} />
             <Route path="warehouse" element={<Warehouse />} />
+            <Route path="fraud-reports" element={<FraudReports />} />
           </Route>
         </Routes>
       </AuthProvider>

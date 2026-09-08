@@ -26,7 +26,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
 export const api = {
   base: API_BASE_URL,
-  get: <T>(path: string) => request<T>(path, { method: 'GET' }),
+  get: <T>(path: string, signal?: AbortSignal) => request<T>(path, { method: 'GET', signal }),
   post: <T>(path: string, data?: unknown) =>
     request<T>(path, { method: 'POST', body: data ? JSON.stringify(data) : undefined }),
   // Upload dung FormData - khong duoc set Content-Type thu cong (trinh duyet

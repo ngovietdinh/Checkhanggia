@@ -60,3 +60,29 @@ export interface DashboardSummary {
   };
   dailySeries: { day: string; result: string; count: number }[];
 }
+
+export type FraudReportStatus = 'new' | 'verifying' | 'confirmed' | 'rejected';
+
+export interface FraudReportItem {
+  id: string;
+  public_id: string | null;
+  image_urls: string[];
+  lat: number | null;
+  lng: number | null;
+  store_name: string | null;
+  description: string | null;
+  status: FraudReportStatus;
+  created_at: string;
+  product_name: string | null;
+  category_code: string | null;
+  batch_number: string | null;
+}
+
+export interface FraudReportListResponse {
+  items: FraudReportItem[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  statusCounts: Record<FraudReportStatus, number>;
+  categoryCounts: { category: string; count: number }[];
+}

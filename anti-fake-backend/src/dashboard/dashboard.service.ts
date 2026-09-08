@@ -32,7 +32,7 @@ export class DashboardService {
       FROM scan_log sl
       INNER JOIN code c ON c.public_id = sl.public_id
       INNER JOIN product_batch pb ON pb.id = c.batch_id
-      WHERE pb.enterprise_id = ${enterpriseId}::uuid
+      WHERE pb.enterprise_id = ${enterpriseId}
         AND sl.scanned_at >= NOW() - INTERVAL '30 days'
       GROUP BY sl.result;
     `;
@@ -53,7 +53,7 @@ export class DashboardService {
       FROM scan_log sl
       INNER JOIN code c ON c.public_id = sl.public_id
       INNER JOIN product_batch pb ON pb.id = c.batch_id
-      WHERE pb.enterprise_id = ${enterpriseId}::uuid
+      WHERE pb.enterprise_id = ${enterpriseId}
         AND sl.scanned_at >= NOW() - INTERVAL '14 days'
       GROUP BY 1, sl.result
       ORDER BY 1 ASC;

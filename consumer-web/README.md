@@ -43,6 +43,15 @@ thì không vấn đề gì; nhưng nếu deploy thật, domain phải có HTTPS
    ngữ nghĩa dùng chung toàn sản phẩm
 3. **`/report`** — form báo cáo hàng giả (CU-03): chụp/chọn ảnh (tối đa 4),
    tự động lấy vị trí GPS (xin quyền trình duyệt), tên điểm bán, mô tả
+4. **`/search`** — tra cứu **toàn trường** bằng 1 ô duy nhất: gõ tên sản
+   phẩm, số lô, mã ĐKSP, hoặc tên doanh nghiệp — hệ thống quét tất cả các
+   trường liên quan, không giới hạn riêng tên sản phẩm. Có **gợi ý tự động
+   khi gõ** (autocomplete, debounce 300ms, tự hủy request cũ khi gõ nhanh để
+   tránh giật kết quả). Chấp nhận sai chính tả/thiếu dấu, phân biệt "khớp
+   chính xác" và "gần đúng" (kèm % độ tương đồng), và **tách riêng cảnh báo
+   hàng đã bị cơ quan chức năng xác nhận là giả** (hiển thị đỏ, ưu tiên lên
+   đầu) khỏi "sản phẩm có đăng ký hợp lệ" (khác bản chất — xem lưu ý ngay
+   trên trang). Khuyến khích quét QR khi có thể để xác thực chắc chắn nhất.
 
 ## Chưa có (giai đoạn sau)
 

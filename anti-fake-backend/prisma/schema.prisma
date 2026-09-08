@@ -4,7 +4,11 @@
 // se duoc them khi trien khai cac service tuong ung (giai doan sau).
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // "native" cho luc chay local; "rhel-openssl-3.0.x" de tuong thich moi
+  // truong Vercel Serverless Function (chay tren Amazon Linux) - neu thieu
+  // dong nay co the gap loi runtime "query engine not found" khi deploy.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
