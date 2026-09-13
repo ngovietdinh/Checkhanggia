@@ -146,6 +146,7 @@ frontend `web-admin` (React):
 | `/api/v1/fraud-reports/:id/status` | PATCH | Bearer JWT | Duyệt/từ chối báo cáo |
 | `/api/v1/search/products` | GET | — (public) | Tìm kiếm toàn trường (1 từ khóa `q`) — quét tên sản phẩm, số lô, mã ĐKSP, doanh nghiệp... |
 | `/api/v1/search/suggest` | GET | — (public) | Gợi ý nhanh cho autocomplete (dùng chung tham số `q`) |
+| `/api/v1/search/barcode` | GET | — (public) | Tự động kiểm tra theo mã vạch bán lẻ (tham số `code`) — ưu tiên dữ liệu tự nhập, fallback Open Food Facts rồi UPCitemdb |
 | `/api/v1/counterfeit-alerts` | GET | — (public) | Danh sách sản phẩm đã bị xác nhận hàng giả/vi phạm |
 | `/api/v1/counterfeit-alerts` | POST | header `x-admin-key` | Thêm mới 1 bản ghi vào danh sách hàng giả |
 

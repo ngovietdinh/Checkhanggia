@@ -28,4 +28,9 @@ export class CreateCounterfeitAlertDto {
   @IsString()
   @MaxLength(255)
   sourceGroup?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(64)
+  barcode?: string;
 }

@@ -2,6 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { SearchService } from './search.service';
 import { SearchQueryDto } from './dto/search-query.dto';
+import { BarcodeQueryDto } from './dto/barcode-query.dto';
 
 /**
  * Endpoint public (khong dang nhap) - tim kiem toan truong theo 1 tu khoa
@@ -24,5 +25,12 @@ export class SearchController {
   @Throttle({ default: { limit: 120, ttl: 60_000 } })
   async suggest(@Query() dto: SearchQueryDto) {
     return this.searchService.suggest(dto.q);
+  }
+
+  // Quet ma vach ban le (EAN/UPC) - tu dong kiem tra that/gia (tinh nang moi)
+  @Get('barcode')
+  @Throttle({ default: { limit: 30, ttl: 60_000 } })
+  async searchByBarcode(@Query() dto: BarcodeQueryDto) {
+    return this.searchService.searchByBarcode(dto.code);
   }
 }

@@ -52,9 +52,11 @@ model CounterfeitAlert {
   violatingBatches   String[] @map("violating_batches")
   responsibleEntity  String?  @map("responsible_entity") // doanh nghiep chiu trach nhiem / ghi chu vi pham
   sourceGroup        String?  @map("source_group") // vd "Phan nhom 1: RQPHAR & He thong Santex, Fusi, Bika Pharma"
+  barcode            String?  @map("barcode") // ma vach ban le (EAN-13/UPC-A) neu thu thap duoc - dung cho quet mã vạch tu dong (muc "quet ma vach" trong app)
   createdAt          DateTime @default(now()) @map("created_at")
 
   @@index([productName])
+  @@index([barcode])
   @@map("counterfeit_alert")
 }
 
@@ -149,6 +151,7 @@ model Product {
   dataSource      DataSource @default(manual) @map("data_source")
   externalRefId   String?  @map("external_ref_id") // idempotency key khi tao qua API (muc 3.3)
   dataQualityStatus DataQualityStatus @default(verified) @map("data_quality_status")
+  barcode         String?  @map("barcode") // ma vach ban le (EAN-13/UPC-A) - doanh nghiep tu khai bao, dung de quet ma vach tu dong nhan dien san pham hop phap
   createdAt       DateTime @default(now()) @map("created_at")
 
   enterprise Enterprise      @relation(fields: [enterpriseId], references: [id])
@@ -156,6 +159,7 @@ model Product {
 
   @@unique([enterpriseId, externalRefId])
   @@index([enterpriseId])
+  @@index([barcode])
   @@map("product")
 }
 

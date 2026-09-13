@@ -35,6 +35,13 @@ export interface SearchResponse {
   counterfeitAlerts: CounterfeitMatchItem[];
 }
 
+export type ResolvedVia = 'local_barcode' | 'openfoodfacts' | 'upcitemdb' | 'not_found';
+
+export interface BarcodeSearchResponse extends SearchResponse {
+  resolvedVia: ResolvedVia;
+  resolvedProductName?: string; // ten san pham nhan dien duoc (khi tra qua Open Food Facts)
+}
+
 export interface SuggestItem {
   type: 'legitimate' | 'counterfeit';
   label: string;
@@ -96,6 +103,122 @@ export class SearchService {
     ];
 
     return merged.sort((a, b) => b.score - a.score).slice(0, SUGGEST_LIMIT);
+  }
+
+  /**
+   * Tra cuu theo ma vach ban le (EAN-13/UPC-A...) - dung cho tinh nang "quet
+   * ma vach tu dong kiem tra". Thu tu uu tien:
+   *  1. Doi chieu truc tiep voi du lieu ma vach TU NHAP trong he thong
+   *     (counterfeit_alert.barcode va product.barcode) - chinh xac tuyet doi,
+   *     khong phu thuoc dich vu ngoai.
+   *  2. Neu khong co du lieu noi bo cho ma vach nay, goi Open Food Facts
+   *     (mien phi, khong can API key) de nhan dien TEN san pham, roi dung
+   *     chinh ten do chay lai qua bo may tim kiem toan truong hien co - vi
+   *     du OFF tra ve "Ensure Gold" va day trung ten voi 1 dong trong danh
+   *     sach hang gia da nhap thu cong, van bat duoc canh bao.
+   *  3. Khong tim thay o dau ca -> tra ve rong, resolvedVia='not_found'.
+   */
+  async searchByBarcode(barcode: string): Promise<BarcodeSearchResponse> {
+    const code = barcode?.trim();
+    if (!code) {
+      throw new BadRequestException('Thiếu mã vạch');
+    }
+
+    // Buoc 1: du lieu noi bo, uu tien tuyet doi
+    const [localCounterfeit, localProducts] = await Promise.all([
+      this.prisma.counterfeitAlert.findMany({ where: { barcode: code }, take: RESULT_LIMIT }),
+      this.prisma.product.findMany({
+        where: { barcode: code },
+        include: { enterprise: true, batches: { orderBy: { createdAt: 'desc' }, take: 3 } },
+      }),
+    ]);
+
+    if (localCounterfeit.length > 0 || localProducts.length > 0) {
+      const counterfeitAlerts: CounterfeitMatchItem[] = localCounterfeit.map((c) => ({
+        productName: c.productName,
+        productType: c.productType,
+        registrationNumber: c.registrationNumber,
+        violatingBatches: c.violatingBatches,
+        responsibleEntity: c.responsibleEntity,
+        sourceGroup: c.sourceGroup,
+        score: 1,
+      }));
+
+      const legitimateMatches: SearchResultItem[] = localProducts.flatMap((p) =>
+        p.batches.map((b) => ({
+          productName: p.name,
+          batchNumber: b.batchNumber,
+          manufactureDate: b.manufactureDate,
+          enterpriseName: p.enterprise.name,
+          matchType: 'exact' as const,
+          score: 1,
+        })),
+      );
+
+      return { legitimateMatches, counterfeitAlerts, resolvedVia: 'local_barcode' };
+    }
+
+    // Buoc 2: fallback ben ngoai - chi de NHAN DIEN TEN, khong tu coi "co
+    // trong CSDL quoc te" la bang chung hang that (day la CSDL cong dong/
+    // thuong mai quoc te, khong lien quan gi toi viec chong hang gia o VN).
+    // Thu Open Food Facts truoc (chuyen sau ve thuc pham, khong can API key),
+    // neu khong co thi thu UPCitemdb (pho quat hon, cung khong can API key
+    // o goi FREE, gioi han 100 luot/ngay theo IP).
+    let resolvedName = await this.lookupOpenFoodFacts(code);
+    let resolvedVia: ResolvedVia = 'openfoodfacts';
+
+    if (!resolvedName) {
+      resolvedName = await this.lookupUpcItemDb(code);
+      resolvedVia = 'upcitemdb';
+    }
+
+    if (!resolvedName) {
+      return { legitimateMatches: [], counterfeitAlerts: [], resolvedVia: 'not_found' };
+    }
+
+    const [legitimateMatches, counterfeitAlerts] = await Promise.all([
+      this.searchLegitimate(resolvedName, RESULT_LIMIT, CLOSE_THRESHOLD),
+      this.searchCounterfeitAlerts(resolvedName, RESULT_LIMIT, CLOSE_THRESHOLD),
+    ]);
+
+    return { legitimateMatches, counterfeitAlerts, resolvedVia, resolvedProductName: resolvedName };
+  }
+
+  private async lookupOpenFoodFacts(barcode: string): Promise<string | null> {
+    try {
+      const res = await fetch(`https://world.openfoodfacts.org/api/v0/product/${encodeURIComponent(barcode)}.json`, {
+        headers: { 'User-Agent': 'AntiFakeApp/1.0 (anti-counterfeit lookup)' },
+        signal: AbortSignal.timeout(4000), // khong de nguoi dung cho qua lau neu OFF cham/timeout
+      });
+      if (!res.ok) return null;
+      const data = (await res.json()) as any;
+      if (data.status !== 1 || !data.product) return null;
+      return data.product.product_name_vi || data.product.product_name || null;
+    } catch {
+      return null; // OFF loi/timeout - khong chan luong chinh, coi nhu khong nhan dien duoc
+    }
+  }
+
+  /**
+   * UPCitemdb - goi FREE khong can dang ky/API key, endpoint /prod/trial/.
+   * Gioi han 100 request/ngay theo IP, burst 6 request/phut (theo tai lieu
+   * chinh thuc). Phu quat cac san pham/thuong hieu quoc te lon hon Open Food
+   * Facts (von chi chuyen thuc pham) - hop voi cac vu hang gia nhai thuong
+   * hieu ngoai trong danh sach BCA (vi du "Ensure Gold", "GH Creation EX").
+   * Van KHONG phu duoc cac nhan hang noi dia VN quy mo nho.
+   */
+  private async lookupUpcItemDb(barcode: string): Promise<string | null> {
+    try {
+      const res = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${encodeURIComponent(barcode)}`, {
+        signal: AbortSignal.timeout(4000),
+      });
+      if (!res.ok) return null;
+      const data = (await res.json()) as any;
+      const title = data?.items?.[0]?.title;
+      return title || null;
+    } catch {
+      return null;
+    }
   }
 
   private async searchCounterfeitAlerts(

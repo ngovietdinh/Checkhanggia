@@ -12,6 +12,10 @@ export class CreateProductDto {
   @IsInt()
   @Min(0)
   warrantyMonths?: number;
+
+  @IsOptional()
+  @IsString()
+  barcode?: string; // ma vach ban le (EAN-13/UPC-A) - dung cho quet ma vach tu dong nhan dien
 }
 
 export class UpdateProductDto {
@@ -28,6 +32,10 @@ export class UpdateProductDto {
   @IsInt()
   @Min(0)
   warrantyMonths?: number;
+
+  @IsOptional()
+  @IsString()
+  barcode?: string;
 }
 
 export class CreateBatchDto {

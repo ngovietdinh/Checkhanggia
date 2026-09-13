@@ -31,6 +31,7 @@ export class ProductService {
         name: dto.name,
         categoryCode: dto.categoryCode,
         warrantyMonths: dto.warrantyMonths ?? 0,
+        barcode: dto.barcode,
         dataSource: 'manual',
       },
     });
