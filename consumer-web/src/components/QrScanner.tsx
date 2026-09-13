@@ -33,6 +33,13 @@ export default function QrScanner({ onScan }: { onScan: (text: string, type: Sca
           Html5QrcodeSupportedFormats.CODABAR,
           Html5QrcodeSupportedFormats.ITF,
         ],
+        // Uu tien dung API goc cua trinh duyet (BarcodeDetector - co san tren
+        // Chrome/Edge tren Android va nhieu ban desktop) thay vi bo giai ma
+        // JS thuan cua thu vien - chinh xac va nhanh hon dang ke cho mã vạch
+        // 1D (EAN/UPC/Code128...), day chinh la nguyen nhan hay gap tinh
+        // trang "camera mo nhung quet mai khong nhan ra ma vach". Tu dong
+        // fallback ve bo giai ma JS neu trinh duyet khong ho tro.
+        useBarCodeDetectorIfSupported: true,
         verbose: false,
       } as any);
       scannerRef.current = scanner;
@@ -40,7 +47,7 @@ export default function QrScanner({ onScan }: { onScan: (text: string, type: Sca
       scanner
         .start(
           { facingMode: 'environment' },
-          { fps: 10, qrbox: { width: 260, height: 260 } },
+          { fps: 10, qrbox: { width: 280, height: 160 } },
           (decodedText: string, decodedResult: any) => {
             // Chi lay ket qua dau tien, dung camera ngay de tranh quet lap
             const format = decodedResult?.result?.format?.formatName;
