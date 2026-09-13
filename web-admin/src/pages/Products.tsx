@@ -28,6 +28,7 @@ function CreateProductModal({ onClose, onCreated }: { onClose: () => void; onCre
   const [name, setName] = useState('');
   const [categoryCode, setCategoryCode] = useState('');
   const [warrantyMonths, setWarrantyMonths] = useState(12);
+  const [barcode, setBarcode] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,7 +36,12 @@ function CreateProductModal({ onClose, onCreated }: { onClose: () => void; onCre
     setSubmitting(true);
     setError(null);
     try {
-      await api.post('/api/v1/products', { name, categoryCode, warrantyMonths });
+      await api.post('/api/v1/products', {
+        name,
+        categoryCode,
+        warrantyMonths,
+        barcode: barcode.trim() || undefined,
+      });
       onCreated();
       onClose();
     } catch (e: any) {
@@ -55,6 +61,17 @@ function CreateProductModal({ onClose, onCreated }: { onClose: () => void; onCre
         <div>
           <label className="block text-xs text-text-muted mb-1.5">Mã danh mục</label>
           <input className={inputClass} value={categoryCode} onChange={(e) => setCategoryCode(e.target.value)} placeholder="Ví dụ: CHAM_SOC_CA_NHAN" />
+        </div>
+        <div>
+          <label className="block text-xs text-text-muted mb-1.5">
+            Mã vạch (tùy chọn) <span className="text-text-muted/70">— để app di động tự nhận diện khi quét</span>
+          </label>
+          <input
+            className={inputClass + ' font-mono'}
+            value={barcode}
+            onChange={(e) => setBarcode(e.target.value)}
+            placeholder="Ví dụ: 8934567890123"
+          />
         </div>
         <div>
           <label className="block text-xs text-text-muted mb-1.5">Bảo hành (tháng)</label>

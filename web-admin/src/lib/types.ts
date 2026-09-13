@@ -11,6 +11,7 @@ export interface Product {
   name: string;
   categoryCode: string;
   warrantyMonths: number;
+  barcode?: string | null;
   dataSource: 'manual' | 'api';
   dataQualityStatus: 'verified' | 'unverified';
   createdAt: string;
