@@ -7,13 +7,36 @@ export type ScannedCodeType = 'qr' | 'barcode';
 
 export default function QrScanner({ onScan }: { onScan: (text: string, type: ScannedCodeType) => void }) {
   const scannerRef = useRef<any>(null);
+  const stoppedRef = useRef(false); // tu theo doi trang thai, khong dua vao noi bo thu vien
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
   const [torchOn, setTorchOn] = useState(false);
   const [torchSupported, setTorchSupported] = useState(false);
 
+  /**
+   * Dung camera an toan - html5-qrcode co the NEM LOI DONG BO ngay khi goi
+   * .stop() neu scanner da dung roi (khong phai loi bat dong bo qua Promise
+   * nhu tuong), nen .catch() thong thuong KHONG bat duoc - phai boc them
+   * try/catch that su. Dong thoi tu theo doi stoppedRef de khong goi stop()
+   * 2 lan (1 lan luc quet thanh cong, 1 lan luc thoat trang) - day chinh la
+   * nguyen nhan gay loi "Cannot stop, scanner is not running or paused."
+   */
+  function safeStop(scanner: any) {
+    if (!scanner || stoppedRef.current) return;
+    stoppedRef.current = true;
+    try {
+      scanner
+        .stop()
+        .then(() => scanner.clear())
+        .catch(() => undefined);
+    } catch {
+      // scanner da o trang thai khong the dung (vi du da dung tu truoc) - bo qua an toan
+    }
+  }
+
   useEffect(() => {
     let cancelled = false;
+    stoppedRef.current = false;
 
     // Import dong (dynamic import) de tranh loi SSR/build khi thu vien dung
     // truc tiep window/navigator.mediaDevices luc module-load.
@@ -36,11 +59,7 @@ export default function QrScanner({ onScan }: { onScan: (text: string, type: Sca
         // Uu tien dung API goc cua trinh duyet (BarcodeDetector - co san tren
         // Chrome/Edge tren Android va nhieu ban desktop) thay vi bo giai ma
         // JS thuan cua thu vien - chinh xac va nhanh hon dang ke cho mã vạch
-        // 1D (EAN/UPC/Code128...), day chinh la nguyen nhan hay gap tinh
-        // trang "camera mo nhung quet mai khong nhan ra ma vach". PHAI dat
-        // long trong experimentalFeatures - dat ngang hang se bi thu vien
-        // am tham bo qua (khong bao loi, chi don gian la khong bat tinh
-        // nang len), day chinh la bug o ban truoc.
+        // 1D (EAN/UPC/Code128...). PHAI dat long trong experimentalFeatures.
         experimentalFeatures: {
           useBarCodeDetectorIfSupported: true,
         },
@@ -56,10 +75,7 @@ export default function QrScanner({ onScan }: { onScan: (text: string, type: Sca
             // Chi lay ket qua dau tien, dung camera ngay de tranh quet lap
             const format = decodedResult?.result?.format?.formatName;
             const type: ScannedCodeType = format === 'QR_CODE' ? 'qr' : 'barcode';
-            scanner
-              .stop()
-              .then(() => scanner.clear())
-              .catch(() => undefined);
+            safeStop(scanner);
             onScan(decodedText, type);
           },
           () => {
@@ -88,10 +104,7 @@ export default function QrScanner({ onScan }: { onScan: (text: string, type: Sca
 
     return () => {
       cancelled = true;
-      const scanner = scannerRef.current;
-      if (scanner) {
-        scanner.stop().then(() => scanner.clear()).catch(() => undefined);
-      }
+      safeStop(scannerRef.current);
     };
   }, [onScan]);
 
