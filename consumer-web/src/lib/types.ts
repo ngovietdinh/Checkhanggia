@@ -44,3 +44,28 @@ export interface SuggestItem {
   sublabel: string;
   score: number;
 }
+
+export type ResolvedVia = 'local_barcode' | 'openfoodfacts' | 'upcitemdb' | 'not_found';
+
+export interface ResolvedProductInfo {
+  name: string;
+  brand?: string;
+  imageUrl?: string;
+  description?: string;
+  category?: string;
+  ingredients?: string;
+  quantity?: string;
+  countryOfOrigin?: string;
+  manufacturingPlace?: string;
+  packaging?: string;
+  allergens?: string[];
+  traces?: string[];
+  additives?: string[];
+  nutritionSummary?: string;
+}
+
+export interface BarcodeSearchResponse extends SearchResponse {
+  resolvedVia: ResolvedVia;
+  resolvedProductName?: string;
+  resolvedProductInfo?: ResolvedProductInfo;
+}

@@ -43,6 +43,15 @@ export interface ResolvedProductInfo {
   imageUrl?: string;
   description?: string;
   category?: string;
+  ingredients?: string; // thanh phan cong bo (chi Open Food Facts co du lieu nay)
+  quantity?: string; // khoi luong/dung tich (vd "500g", "1L")
+  countryOfOrigin?: string;
+  manufacturingPlace?: string; // noi san xuat cu the (khac countryOfOrigin - co the la ten nha may/thanh pho)
+  packaging?: string; // loai bao bi (vd "Chai nhua, Hop giay")
+  allergens?: string[]; // chat gay di ung (neu co cong bo)
+  traces?: string[]; // "co the chua vet cua" - canh bao chio nguoi di ung
+  additives?: string[]; // phu gia thuc pham (E-so)
+  nutritionSummary?: string; // tom tat vai chi so dinh duong chinh, dang text de don gian
 }
 
 export interface BarcodeSearchResponse extends SearchResponse {
@@ -202,22 +211,78 @@ export class SearchService {
 
   private async lookupOpenFoodFacts(barcode: string): Promise<ResolvedProductInfo | null> {
     try {
-      const res = await fetch(`https://world.openfoodfacts.org/api/v0/product/${encodeURIComponent(barcode)}.json`, {
-        headers: { 'User-Agent': 'AntiFakeApp/1.0 (anti-counterfeit lookup)' },
-        signal: AbortSignal.timeout(4000), // khong de nguoi dung cho qua lau neu OFF cham/timeout
-      });
+      // API v3 + fields=... : chi lay dung cac truong can, gon va nhanh hon
+      // v0. lc=vi: yeu cau OFF tra ve cac truong da dich (product_name,
+      // categories, allergens, traces...) sang tieng Viet khi co ban dich
+      // trong taxonomy cua ho - neu khong co ban dich, tu dong fallback ve
+      // ban goc (thuong la tieng Anh hoac ngon ngu nha san xuat khai bao).
+      const fields = [
+        'code',
+        'product_name',
+        'brands',
+        'quantity',
+        'ingredients_text',
+        'allergens_tags',
+        'traces_tags',
+        'additives_tags',
+        'nutriments',
+        'countries',
+        'origins',
+        'manufacturing_places',
+        'packaging',
+        'categories',
+        'generic_name',
+        'image_front_url',
+        'image_url',
+      ].join(',');
+
+      const res = await fetch(
+        `https://world.openfoodfacts.org/api/v3/product/${encodeURIComponent(barcode)}?fields=${fields}&lc=vi`,
+        {
+          headers: { 'User-Agent': 'AntiFakeApp/1.0 (anti-counterfeit lookup)' },
+          signal: AbortSignal.timeout(4000), // khong de nguoi dung cho qua lau neu OFF cham/timeout
+        },
+      );
       if (!res.ok) return null;
       const data = (await res.json()) as any;
-      if (data.status !== 1 || !data.product) return null;
+      // API v3 tra ve status dang chuoi "success"/"failure" (khac v0 dung so 1/0)
+      if (data.status !== 'success' || !data.product) return null;
+
       const p = data.product;
-      const name = p.product_name_vi || p.product_name;
+      const name = p.product_name;
       if (!name) return null;
+
+      const cleanTags = (tags?: string[]): string[] | undefined =>
+        Array.isArray(tags) && tags.length > 0
+          ? tags.map((t) => {
+              const stripped = t.replace(/^\w{2,3}:/, '').replace(/-/g, ' ');
+              return stripped.charAt(0).toUpperCase() + stripped.slice(1);
+            })
+          : undefined;
+
+      const n = p.nutriments;
+      const nutritionParts: string[] = [];
+      if (n?.['energy-kcal_100g'] != null) nutritionParts.push(`${n['energy-kcal_100g']} kcal`);
+      if (n?.proteins_100g != null) nutritionParts.push(`${n.proteins_100g}g đạm`);
+      if (n?.fat_100g != null) nutritionParts.push(`${n.fat_100g}g chất béo`);
+      if (n?.sugars_100g != null) nutritionParts.push(`${n.sugars_100g}g đường`);
+      const nutritionSummary = nutritionParts.length > 0 ? `${nutritionParts.join(' · ')} (trên 100g/100ml)` : undefined;
+
       return {
         name,
         brand: p.brands || undefined,
         imageUrl: p.image_front_url || p.image_url || undefined,
-        description: p.generic_name_vi || p.generic_name || p.ingredients_text_vi || p.ingredients_text || undefined,
+        description: p.generic_name || undefined,
         category: p.categories?.split(',')?.[0]?.trim() || undefined,
+        ingredients: p.ingredients_text || undefined,
+        quantity: p.quantity || undefined,
+        countryOfOrigin: p.countries || p.origins || undefined,
+        manufacturingPlace: p.manufacturing_places || undefined,
+        packaging: p.packaging || undefined,
+        allergens: cleanTags(p.allergens_tags),
+        traces: cleanTags(p.traces_tags),
+        additives: cleanTags(p.additives_tags),
+        nutritionSummary,
       };
     } catch {
       return null; // OFF loi/timeout - khong chan luong chinh, coi nhu khong nhan dien duoc
@@ -247,6 +312,7 @@ export class SearchService {
         imageUrl: item.images?.[0] || undefined,
         description: item.description || undefined,
         category: item.category || undefined,
+        quantity: item.size || item.weight || undefined,
       };
     } catch {
       return null;

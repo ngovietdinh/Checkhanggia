@@ -20,9 +20,13 @@ export default function Home() {
     return trimmed;
   }
 
-  function handleScan(text: string) {
+  function handleScan(text: string, type: 'qr' | 'barcode') {
     setScanning(false);
-    navigate(`/verify/${encodeURIComponent(extractPublicId(text))}`);
+    if (type === 'qr') {
+      navigate(`/verify/${encodeURIComponent(extractPublicId(text))}`);
+    } else {
+      navigate(`/barcode/${encodeURIComponent(text.trim())}`);
+    }
   }
 
   function handleManualSubmit(e: FormEvent) {
@@ -60,7 +64,7 @@ export default function Home() {
               className="w-full flex items-center justify-center gap-2.5 bg-verify-valid text-canvas font-semibold rounded-2xl py-4 text-base hover:brightness-110 active:scale-[0.98] transition shadow-glow"
             >
               <ScanLine size={20} />
-              Quét mã QR
+              Quét QR / Mã vạch
             </button>
             <button
               onClick={() => setManualMode(true)}
@@ -82,7 +86,7 @@ export default function Home() {
         {scanning && (
           <div className="w-full mt-8">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm text-text-muted">Hướng camera vào mã QR trên tem</span>
+              <span className="text-sm text-text-muted">Hướng camera vào mã QR hoặc mã vạch sản phẩm</span>
               <button onClick={() => setScanning(false)} className="text-text-muted hover:text-text">
                 <X size={18} />
               </button>
