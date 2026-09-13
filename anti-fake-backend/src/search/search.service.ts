@@ -37,9 +37,18 @@ export interface SearchResponse {
 
 export type ResolvedVia = 'local_barcode' | 'openfoodfacts' | 'upcitemdb' | 'not_found';
 
+export interface ResolvedProductInfo {
+  name: string;
+  brand?: string;
+  imageUrl?: string;
+  description?: string;
+  category?: string;
+}
+
 export interface BarcodeSearchResponse extends SearchResponse {
   resolvedVia: ResolvedVia;
-  resolvedProductName?: string; // ten san pham nhan dien duoc (khi tra qua Open Food Facts)
+  resolvedProductName?: string; // giu lai de tuong thich nguoc, trung voi resolvedProductInfo.name
+  resolvedProductInfo?: ResolvedProductInfo; // thong tin day du hon (anh, thuong hieu, mo ta) khi co
 }
 
 export interface SuggestItem {
@@ -158,33 +167,40 @@ export class SearchService {
       return { legitimateMatches, counterfeitAlerts, resolvedVia: 'local_barcode' };
     }
 
-    // Buoc 2: fallback ben ngoai - chi de NHAN DIEN TEN, khong tu coi "co
-    // trong CSDL quoc te" la bang chung hang that (day la CSDL cong dong/
-    // thuong mai quoc te, khong lien quan gi toi viec chong hang gia o VN).
-    // Thu Open Food Facts truoc (chuyen sau ve thuc pham, khong can API key),
-    // neu khong co thi thu UPCitemdb (pho quat hon, cung khong can API key
-    // o goi FREE, gioi han 100 luot/ngay theo IP).
-    let resolvedName = await this.lookupOpenFoodFacts(code);
+    // Buoc 2: fallback ben ngoai - chi de NHAN DIEN THONG TIN THAM KHAO (ten,
+    // anh, thuong hieu, mo ta), khong tu coi "co trong CSDL quoc te" la bang
+    // chung hang that (day la CSDL cong dong/thuong mai quoc te, khong lien
+    // quan gi toi viec chong hang gia o VN). Thu Open Food Facts truoc
+    // (chuyen sau ve thuc pham, khong can API key), neu khong co thi thu
+    // UPCitemdb (pho quat hon, cung khong can API key o goi FREE, gioi han
+    // 100 luot/ngay theo IP).
+    let productInfo = await this.lookupOpenFoodFacts(code);
     let resolvedVia: ResolvedVia = 'openfoodfacts';
 
-    if (!resolvedName) {
-      resolvedName = await this.lookupUpcItemDb(code);
+    if (!productInfo) {
+      productInfo = await this.lookupUpcItemDb(code);
       resolvedVia = 'upcitemdb';
     }
 
-    if (!resolvedName) {
+    if (!productInfo) {
       return { legitimateMatches: [], counterfeitAlerts: [], resolvedVia: 'not_found' };
     }
 
     const [legitimateMatches, counterfeitAlerts] = await Promise.all([
-      this.searchLegitimate(resolvedName, RESULT_LIMIT, CLOSE_THRESHOLD),
-      this.searchCounterfeitAlerts(resolvedName, RESULT_LIMIT, CLOSE_THRESHOLD),
+      this.searchLegitimate(productInfo.name, RESULT_LIMIT, CLOSE_THRESHOLD),
+      this.searchCounterfeitAlerts(productInfo.name, RESULT_LIMIT, CLOSE_THRESHOLD),
     ]);
 
-    return { legitimateMatches, counterfeitAlerts, resolvedVia, resolvedProductName: resolvedName };
+    return {
+      legitimateMatches,
+      counterfeitAlerts,
+      resolvedVia,
+      resolvedProductName: productInfo.name,
+      resolvedProductInfo: productInfo,
+    };
   }
 
-  private async lookupOpenFoodFacts(barcode: string): Promise<string | null> {
+  private async lookupOpenFoodFacts(barcode: string): Promise<ResolvedProductInfo | null> {
     try {
       const res = await fetch(`https://world.openfoodfacts.org/api/v0/product/${encodeURIComponent(barcode)}.json`, {
         headers: { 'User-Agent': 'AntiFakeApp/1.0 (anti-counterfeit lookup)' },
@@ -193,7 +209,16 @@ export class SearchService {
       if (!res.ok) return null;
       const data = (await res.json()) as any;
       if (data.status !== 1 || !data.product) return null;
-      return data.product.product_name_vi || data.product.product_name || null;
+      const p = data.product;
+      const name = p.product_name_vi || p.product_name;
+      if (!name) return null;
+      return {
+        name,
+        brand: p.brands || undefined,
+        imageUrl: p.image_front_url || p.image_url || undefined,
+        description: p.generic_name_vi || p.generic_name || p.ingredients_text_vi || p.ingredients_text || undefined,
+        category: p.categories?.split(',')?.[0]?.trim() || undefined,
+      };
     } catch {
       return null; // OFF loi/timeout - khong chan luong chinh, coi nhu khong nhan dien duoc
     }
@@ -207,15 +232,22 @@ export class SearchService {
    * hieu ngoai trong danh sach BCA (vi du "Ensure Gold", "GH Creation EX").
    * Van KHONG phu duoc cac nhan hang noi dia VN quy mo nho.
    */
-  private async lookupUpcItemDb(barcode: string): Promise<string | null> {
+  private async lookupUpcItemDb(barcode: string): Promise<ResolvedProductInfo | null> {
     try {
       const res = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${encodeURIComponent(barcode)}`, {
         signal: AbortSignal.timeout(4000),
       });
       if (!res.ok) return null;
       const data = (await res.json()) as any;
-      const title = data?.items?.[0]?.title;
-      return title || null;
+      const item = data?.items?.[0];
+      if (!item?.title) return null;
+      return {
+        name: item.title,
+        brand: item.brand || undefined,
+        imageUrl: item.images?.[0] || undefined,
+        description: item.description || undefined,
+        category: item.category || undefined,
+      };
     } catch {
       return null;
     }
