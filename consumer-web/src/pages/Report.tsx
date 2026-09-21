@@ -94,7 +94,7 @@ export default function Report() {
         <div className="h-20 w-20 rounded-full bg-verify-valid/10 border border-verify-valid/30 flex items-center justify-center mb-5">
           <CheckCircle2 size={40} className="text-verify-valid" />
         </div>
-        <h1 className="text-xl font-bold">Đã gửi báo cáo</h1>
+        <h1 className="font-display text-2xl font-semibold text-text">Đã gửi báo cáo</h1>
         <p className="text-sm text-text-muted mt-2 max-w-xs leading-relaxed">
           Cảm ơn bạn đã đóng góp. Đội ngũ kiểm tra sẽ xem xét báo cáo này.
         </p>
@@ -117,7 +117,7 @@ export default function Report() {
       </div>
 
       <div className="flex-1 px-5 pb-10 pt-4 max-w-md mx-auto w-full">
-        <h1 className="text-lg font-semibold">Báo cáo hàng giả</h1>
+        <h1 className="font-display text-xl font-semibold text-text">Báo cáo hàng giả</h1>
         <p className="text-sm text-text-muted mt-1 leading-relaxed">
           Cung cấp thông tin càng chi tiết, đội ngũ xử lý càng nhanh và chính xác.
         </p>

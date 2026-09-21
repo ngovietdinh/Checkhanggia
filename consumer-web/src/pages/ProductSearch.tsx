@@ -116,7 +116,7 @@ export default function ProductSearch() {
       </div>
 
       <div className="flex-1 px-5 pb-10 pt-4 max-w-md mx-auto w-full">
-        <h1 className="text-lg font-semibold">Tra cứu nhanh</h1>
+        <h1 className="font-display text-xl font-semibold text-text">Tra cứu nhanh</h1>
         <p className="text-sm text-text-muted mt-1 leading-relaxed">
           Gõ tên sản phẩm, số lô, mã ĐKSP, hoặc tên doanh nghiệp — không cần nhớ chính xác, không cần quét QR.
         </p>

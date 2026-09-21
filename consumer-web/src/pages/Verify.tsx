@@ -158,7 +158,7 @@ export default function Verify() {
 
       <div className="flex-1 flex flex-col items-center justify-center px-5 max-w-md mx-auto w-full">
         <Sparkles size={26} className="text-verify-data mb-4" />
-        <h1 className="text-lg font-semibold text-center">{lookup.productName || 'Sản phẩm'}</h1>
+        <h1 className="font-display text-xl font-semibold text-center text-text">{lookup.productName || 'Sản phẩm'}</h1>
         {lookup.batchNumber && (
           <p className="text-xs text-text-muted font-mono mt-1">
             Lô: {lookup.batchNumber}
@@ -224,7 +224,7 @@ function ResultHero({
       <div className={`h-20 w-20 rounded-full ${c.bg} border ${c.border} flex items-center justify-center mb-5`}>
         <Icon size={40} className={c.text} />
       </div>
-      <h1 className={`text-2xl font-bold ${c.text}`}>{title}</h1>
+      <h1 className={`font-display text-[1.75rem] font-semibold ${c.text}`}>{title}</h1>
       <p className="text-sm text-text-muted mt-2 leading-relaxed">{subtitle}</p>
     </>
   );

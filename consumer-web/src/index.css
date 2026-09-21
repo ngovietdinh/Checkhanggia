@@ -13,13 +13,13 @@ body,
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: '"IBM Plex Sans"', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior-y: none;
 }
 
 ::selection {
-  background: rgba(0, 229, 160, 0.25);
+  background: rgba(163, 38, 57, 0.18);
 }
 
 /* html5-qrcode tu ve UI mac dinh cho khung quet - ghi de mot chut de hop mau thuong hieu */

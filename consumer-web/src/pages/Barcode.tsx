@@ -52,7 +52,7 @@ export default function Barcode() {
       </div>
 
       <div className="px-5 pb-16 pt-4 max-w-md mx-auto w-full">
-        <h1 className="text-lg font-semibold">Kết quả kiểm tra tự động</h1>
+        <h1 className="font-display text-xl font-semibold text-text">Kết quả kiểm tra tự động</h1>
         <p className="text-xs text-text-muted font-mono mt-1">Mã vạch: {code}</p>
 
         {loading && (
